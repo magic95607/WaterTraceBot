@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  watertracebot:
+    build: .
+    container_name: watertracebot
+    restart: unless-stopped
+    volumes:
+      # 掛載環境變數檔，方便在主機端隨時修改 Token
+      - ./.env:/app/.env:ro
+      # 掛載設定檔與圖片資料庫，確保容器重啟或更新時，機器人設定與洩漏追蹤記錄不會消失
+      - ./config.json:/app/config.json
+      - ./images.json:/app/images.json
+    environment:
+      - TZ=Asia/Taipei
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
